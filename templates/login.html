@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Sign in · Aarogya Connect{% endblock %}
+{% block body %}
+<div class="auth-shell">
+  <div class="auth-visual">
+    <div class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-9.5-8.5C.7 9 2 5 6 5c2 0 3.5 1.2 6 4 2.5-2.8 4-4 6-4 4 0 5.3 4 3.5 7.5C19 16.65 12 21 12 21z"/></svg>
+      </span>
+      Aarogya Connect
+    </div>
+
+    <div>
+      <div class="headline">Care that keeps a steady rhythm.</div>
+      <p class="sub">One place for patients and doctors to book visits, message securely, and keep every record in sync — guided by an assistant that asks the right questions before you even reach the doctor.</p>
+
+      <div class="vital-wrap">
+        <svg class="vital-line animated" viewBox="0 0 340 32" preserveAspectRatio="none">
+          <path d="M0 16 H60 L74 16 L84 4 L96 28 L108 16 L118 16 L128 8 L138 24 L148 16 H340" />
+        </svg>
+      </div>
+
+      <div class="stats">
+        <div>
+          <div class="stat-num">4</div>
+          <div class="stat-label">Specialities on call</div>
+        </div>
+        <div>
+          <div class="stat-num">24/7</div>
+          <div class="stat-label">AI triage assistant</div>
+        </div>
+        <div>
+          <div class="stat-num">SQLite</div>
+          <div class="stat-label">Lightweight by design</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-form-wrap">
+    <form class="auth-form" id="loginForm">
+      <h1>Welcome back</h1>
+      <p class="lede">Sign in to continue to your dashboard.</p>
+
+      <div class="form-error" id="formError"></div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button class="btn btn-primary submit" type="submit">Sign in</button>
+
+      <p class="switch">New to Aarogya Connect? <a href="{{ url_for('signup') }}">Create an account</a></p>
+      <p class="switch mono" style="margin-top:10px; font-size:12px;">Demo: rahul.verma@example.com / password123</p>
+      <p class="switch mono" style="margin-top:2px; font-size:12px;">Doctor demo: ananya.rao@healthconnect.io / password123</p>
+      <p class="switch mono" style="margin-top:2px; font-size:12px;">Pharmacy demo: sunrise.pharmacy@healthconnect.io / password123</p>
+    </form>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById('formError');
+  errEl.classList.remove('show');
+  const body = {
+    email: document.getElementById('email').value,
+    password: document.getElementById('password').value,
+  };
+  try {
+    const res = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+    window.location.href = data.redirect;
+  } catch (err) {
+    errEl.textContent = err.message;
+    errEl.classList.add('show');
+  }
+});
+</script>
+{% endblock %}
