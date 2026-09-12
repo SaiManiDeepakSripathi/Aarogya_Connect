@@ -1024,6 +1024,8 @@ def update_order(order_id):
 # ------------------------------------------------------------------- main --
 
 if __name__ == "__main__":
-    # host='0.0.0.0' so the app is reachable from other devices on the same
-    # network (e.g. testing on a phone) — not just from this machine.
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    import os
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+if __name__ == "__main__":
+    app.run(debug=True)
